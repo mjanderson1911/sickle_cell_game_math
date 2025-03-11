@@ -511,7 +511,7 @@
             <div id="answerOptions" class="answer-options"></div>
             <div id="feedback" class="feedback"></div>
             <div class="controls">
-                <button id="nextButton" class="control-btn" onclick="nextQuest()">Begin Quest</button>
+                <button id="nextButton" class="control-btn">Begin Quest</button>
                 <button id="helpButton" class="control-btn" onclick="showHelp()">Help</button>
             </div>
         </div>
@@ -536,6 +536,212 @@
         let currentProblemAnswer = 0;
         let problemsCorrect = 0;
         let regionQuestCount = 3; // Number of quests per region
+        
+        // Initialize game when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Game initialized");
+            
+            // Initialize character selection hover effects
+            initializeCharacterHover();
+            
+            // Initialize button event listeners
+            initializeButtons();
+            
+            // Make sure all game variables are reset
+            resetGameState();
+        });
+        
+        function resetGameState() {
+            playerCharacter = '';
+            currentRegion = '';
+            questProgress = 0;
+            questsCompleted = 0;
+            health = 100;
+            water = 80;
+            xp = 0;
+            currentProblemAnswer = 0;
+            problemsCorrect = 0;
+            
+            console.log("Game state reset");
+        }
+        
+        function initializeCharacterHover() {
+            const characterOptions = document.querySelectorAll('.character-option');
+            const detailsContainer = document.querySelector('.character-details-container');
+            
+            // Add hover event listeners
+            characterOptions.forEach(option => {
+                const character = option.querySelector('p').textContent.toLowerCase().split(' ')[0];
+                
+                option.addEventListener('mouseenter', function() {
+                    if (!playerCharacter) {
+                        document.querySelectorAll('.character-details').forEach(el => {
+                            el.style.display = 'none';
+                        });
+                        document.getElementById(character + 'Details').style.display = 'block';
+                    }
+                });
+                
+                option.addEventListener('mouseleave', function(e) {
+                    if (!playerCharacter) {
+                        // Check if we're not hovering over another character option or the details container
+                        const relatedTarget = e.relatedTarget;
+                        if (!relatedTarget || 
+                            (!relatedTarget.closest('.character-option') && 
+                             !relatedTarget.closest('.character-details-container'))) {
+                            document.querySelectorAll('.character-details').forEach(el => {
+                                el.style.display = 'none';
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // Add event listener for the details container
+            if (detailsContainer) {
+                detailsContainer.addEventListener('mouseleave', function(e) {
+                    if (!playerCharacter) {
+                        // Check if we're not hovering over a character option
+                        const relatedTarget = e.relatedTarget;
+                        if (!relatedTarget || !relatedTarget.closest('.character-option')) {
+                            document.querySelectorAll('.character-details').forEach(el => {
+                                el.style.display = 'none';
+                            });
+                        }
+                    }
+                });
+            }
+        }
+        
+        function initializeButtons() {
+            // Set up the nextButton with a default handler
+            const nextButton = document.getElementById('nextButton');
+            if (nextButton) {
+                // Remove any existing event listeners
+                nextButton.onclick = null;
+                
+                // Add a new event listener
+                nextButton.onclick = function() {
+                    console.log("Next button clicked with text:", nextButton.textContent);
+                    
+                    // Different behavior based on button text
+                    if (nextButton.textContent === "Begin Quest") {
+                        console.log("Begin Quest button clicked, calling beginFirstQuest()");
+                        beginFirstQuest();
+                    } else if (nextButton.textContent === "Choose Next Region") {
+                        console.log("Choose Next Region button clicked");
+                        // Show region selection
+                        document.getElementById('regionSelect').style.display = 'block';
+                        
+                        // Reset button
+                        nextButton.textContent = "Next";
+                        nextButton.style.display = 'none';
+                    } else {
+                        console.log("Next button clicked, calling nextQuest()");
+                        nextQuest();
+                    }
+                };
+                console.log("Next button initialized with onclick handler");
+                
+                // Force the button to have the correct text
+                if (nextButton.textContent === "") {
+                    nextButton.textContent = "Begin Quest";
+                }
+            } else {
+                console.error("Next button not found in the DOM");
+            }
+            
+            // Add a debug button to the page
+            addDebugButton();
+        }
+        
+        function addDebugButton() {
+            // Always add the debug button for this project
+            const debugButton = document.createElement('button');
+            debugButton.textContent = "Debug";
+            debugButton.style.position = 'fixed';
+            debugButton.style.bottom = '10px';
+            debugButton.style.right = '10px';
+            debugButton.style.zIndex = '9999';
+            debugButton.style.padding = '5px 10px';
+            debugButton.style.backgroundColor = '#ff5722';
+            debugButton.style.color = 'white';
+            debugButton.style.border = 'none';
+            debugButton.style.borderRadius = '4px';
+            debugButton.style.cursor = 'pointer';
+            
+            debugButton.onclick = function() {
+                console.log("=== DEBUG INFO ===");
+                console.log("playerCharacter:", playerCharacter);
+                console.log("currentRegion:", currentRegion);
+                console.log("questProgress:", questProgress);
+                console.log("questsCompleted:", questsCompleted);
+                console.log("nextButton text:", document.getElementById('nextButton').textContent);
+                console.log("nextButton display:", document.getElementById('nextButton').style.display);
+                console.log("nextButton onclick:", document.getElementById('nextButton').onclick ? "defined" : "undefined");
+                console.log("regionSelect display:", document.getElementById('regionSelect').style.display);
+                console.log("questDescriptions available:", Object.keys(questDescriptions));
+                console.log("problems available:", Object.keys(problems));
+                
+                // Test the button click
+                const nextButton = document.getElementById('nextButton');
+                if (nextButton.style.display !== 'none') {
+                    console.log("Simulating click on nextButton with text:", nextButton.textContent);
+                    nextButton.click();
+                }
+                
+                // Force the button to work if it's not responding
+                if (nextButton.textContent === "Begin Quest") {
+                    console.log("Forcing beginFirstQuest() call");
+                    
+                    // If no region is selected, default to hydration
+                    if (!currentRegion) {
+                        console.log("No region selected, defaulting to 'hydration'");
+                        currentRegion = 'hydration';
+                    }
+                    
+                    beginFirstQuest();
+                }
+                
+                // Add a fix button
+                const fixButton = document.createElement('button');
+                fixButton.textContent = "Fix Game";
+                fixButton.style.position = 'fixed';
+                fixButton.style.bottom = '10px';
+                fixButton.style.right = '80px';
+                fixButton.style.zIndex = '9999';
+                fixButton.style.padding = '5px 10px';
+                fixButton.style.backgroundColor = '#4caf50';
+                fixButton.style.color = 'white';
+                fixButton.style.border = 'none';
+                fixButton.style.borderRadius = '4px';
+                fixButton.style.cursor = 'pointer';
+                
+                fixButton.onclick = function() {
+                    // Reset the game state
+                    currentRegion = 'hydration';
+                    questProgress = 0;
+                    
+                    // Force the button to be visible and have the correct text
+                    const nextButton = document.getElementById('nextButton');
+                    nextButton.textContent = "Begin Quest";
+                    nextButton.style.display = 'inline-block';
+                    
+                    // Reinitialize the button
+                    initializeButtons();
+                    
+                    // Show a success message
+                    alert("Game state fixed! Try clicking 'Begin Quest' now.");
+                };
+                
+                // Add the fix button to the page if it doesn't already exist
+                if (!document.querySelector('button[style*="right: 80px"]')) {
+                    document.body.appendChild(fixButton);
+                }
+            };
+            
+            document.body.appendChild(debugButton);
+        }
         
         // Backgrounds for different regions
         const backgrounds = {
@@ -709,55 +915,6 @@
             playSelectSound(character);
         }
         
-        // Add event listeners for character options after DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            const characterOptions = document.querySelectorAll('.character-option');
-            const detailsContainer = document.querySelector('.character-details-container');
-            
-            // Add hover event listeners
-            characterOptions.forEach(option => {
-                const character = option.querySelector('p').textContent.toLowerCase().split(' ')[0];
-                
-                option.addEventListener('mouseenter', function() {
-                    if (!playerCharacter) {
-                        document.querySelectorAll('.character-details').forEach(el => {
-                            el.style.display = 'none';
-                        });
-                        document.getElementById(character + 'Details').style.display = 'block';
-                    }
-                });
-                
-                option.addEventListener('mouseleave', function(e) {
-                    if (!playerCharacter) {
-                        // Check if we're not hovering over another character option or the details container
-                        const relatedTarget = e.relatedTarget;
-                        if (!relatedTarget || 
-                            (!relatedTarget.closest('.character-option') && 
-                             !relatedTarget.closest('.character-details-container'))) {
-                            document.querySelectorAll('.character-details').forEach(el => {
-                                el.style.display = 'none';
-                            });
-                        }
-                    }
-                });
-            });
-            
-            // Add event listener for the details container
-            if (detailsContainer) {
-                detailsContainer.addEventListener('mouseleave', function(e) {
-                    if (!playerCharacter) {
-                        // Check if we're not hovering over a character option
-                        const relatedTarget = e.relatedTarget;
-                        if (!relatedTarget || !relatedTarget.closest('.character-option')) {
-                            document.querySelectorAll('.character-details').forEach(el => {
-                                el.style.display = 'none';
-                            });
-                        }
-                    }
-                });
-            }
-        });
-        
         function playSelectSound(character) {
             // Create audio element for selection sound
             const audio = new Audio();
@@ -780,6 +937,8 @@
         }
         
         function startGame() {
+            console.log("Starting game with character:", playerCharacter);
+            
             if (!playerCharacter) {
                 alert("Please select a character to begin!");
                 return;
@@ -809,23 +968,57 @@
             // Update stats with character bonuses
             updateStats();
             
+            // Reset game state variables
+            currentRegion = '';
+            questProgress = 0;
+            
             // Show region selection
-            document.getElementById('regionSelect').style.display = 'block';
+            const regionSelect = document.getElementById('regionSelect');
+            regionSelect.style.display = 'block';
+            console.log("Region selection displayed:", regionSelect.style.display);
+            
+            // Make sure the next button is properly set up
+            const nextButton = document.getElementById('nextButton');
+            nextButton.textContent = "Begin Quest";
+            nextButton.style.display = 'inline-block';
+            console.log("Next button set up:", nextButton.textContent, nextButton.style.display);
         }
         
         function selectRegion(region) {
+            console.log("Region selected:", region);
+            
+            // Validate region
+            if (!['hydration', 'medication', 'blood'].includes(region)) {
+                console.error("Invalid region selected:", region);
+                return;
+            }
+            
+            // Set current region
             currentRegion = region;
+            console.log("Current region set to:", currentRegion);
+            
+            // Reset quest progress for this region
+            questProgress = 0;
+            
+            // Hide region selection
             document.getElementById('regionSelect').style.display = 'none';
+            
+            // Update location display
             document.getElementById('currentLocation').textContent = region.charAt(0).toUpperCase() + region.slice(1) + " Land";
             document.getElementById('locationImage').style = locationImages[region];
-            questProgress = 0;
+            
+            // Update progress bar
             updateProgress();
             
-            // Show introduction to the region instead of immediately starting the quest
+            // Show introduction to the region
             showRegionIntroduction(region);
+            
+            console.log("Region setup complete, questProgress =", questProgress, "currentRegion =", currentRegion);
         }
         
         function showRegionIntroduction(region) {
+            console.log("Showing introduction for region:", region);
+            
             // Hide math problem and answer options during introduction
             document.getElementById('mathProblem').style.display = 'none';
             document.getElementById('answerOptions').innerHTML = '';
@@ -852,6 +1045,10 @@
                     introText = `<h3>Welcome to the Blood Cell Cavern!</h3>
                     <p>Inside this mysterious cavern, you can see the microscopic world of blood cells. Moon-shaped cells flow alongside normal round cells.</p>
                     <p>Your mission is to solve blood-related math problems to understand how Moon Blood works in your body.</p>`;
+                    break;
+                default:
+                    console.error("Unknown region:", region);
+                    introText = "<p>Welcome to this magical region!</p>";
                     break;
             }
             
@@ -883,24 +1080,93 @@
             const nextButton = document.getElementById('nextButton');
             nextButton.textContent = "Begin Quest";
             nextButton.style.display = 'inline-block';
-            nextButton.onclick = beginFirstQuest;
+            
+            // We don't need to set onclick here since it's handled by the initializeButtons function
             
             // Add a pulsing effect to the button to draw attention
             nextButton.classList.add('pulse-button');
+            
+            console.log("Region introduction complete, 'Begin Quest' button should be visible");
         }
         
         function beginFirstQuest() {
+            console.log("Beginning first quest for region:", currentRegion, "questProgress:", questProgress);
+            
+            // Check if currentRegion is empty and set a default if needed
+            if (!currentRegion) {
+                console.log("No region selected, defaulting to 'hydration'");
+                currentRegion = 'hydration';
+            }
+            
+            // Validate that we have a valid region and quest data
+            if (!questDescriptions[currentRegion]) {
+                console.error("Missing questDescriptions for region:", currentRegion);
+                console.log("Available questDescriptions:", Object.keys(questDescriptions));
+                alert("Error loading quest data. Please try again.");
+                return;
+            }
+            
+            if (!problems[currentRegion]) {
+                console.error("Missing problems for region:", currentRegion);
+                console.log("Available problems:", Object.keys(problems));
+                alert("Error loading quest data. Please try again.");
+                return;
+            }
+            
             // Remove the pulsing effect
             document.getElementById('nextButton').classList.remove('pulse-button');
             
-            // Reset the button's onclick to the standard nextQuest function
-            document.getElementById('nextButton').onclick = nextQuest;
-            
-            // Show math problem section
-            document.getElementById('mathProblem').style.display = 'block';
-            
-            // Start the first quest
-            nextQuest();
+            try {
+                // Get the quest description for the current region and progress
+                const questDescription = questDescriptions[currentRegion][questProgress];
+                console.log("Quest description:", questDescription);
+                
+                // Get the problem for the current region and progress
+                const problem = problems[currentRegion][questProgress];
+                console.log("Problem:", problem);
+                
+                if (!questDescription) {
+                    console.error("Missing quest description for region:", currentRegion, "progress:", questProgress);
+                    throw new Error("Missing quest description");
+                }
+                
+                if (!problem) {
+                    console.error("Missing problem for region:", currentRegion, "progress:", questProgress);
+                    throw new Error("Missing problem data");
+                }
+                
+                // Display the current quest
+                document.getElementById('questText').textContent = questDescription;
+                
+                // Display the math problem
+                document.getElementById('mathProblem').textContent = problem.question;
+                document.getElementById('mathProblem').style.display = 'block';
+                
+                // Create answer buttons
+                let answerHTML = '';
+                problem.options.forEach(option => {
+                    answerHTML += `<button class="option-btn" onclick="checkAnswer(${option})">${option}</button>`;
+                });
+                document.getElementById('answerOptions').innerHTML = answerHTML;
+                
+                // Store correct answer
+                currentProblemAnswer = problem.answer;
+                
+                // Clear previous feedback
+                document.getElementById('feedback').textContent = '';
+                document.getElementById('feedback').style.backgroundColor = 'transparent';
+                
+                // Update button text
+                document.getElementById('nextButton').textContent = "Next";
+                
+                // Hide the button until an answer is selected
+                document.getElementById('nextButton').style.display = 'none';
+                
+                console.log("First quest displayed successfully");
+            } catch (error) {
+                console.error("Error displaying first quest:", error);
+                alert("Error loading quest. Please try again.");
+            }
         }
         
         function nextQuest() {
@@ -908,11 +1174,6 @@
             if (questProgress >= regionQuestCount) {
                 completeRegion();
                 return;
-            }
-            
-            // Update button text after beginning
-            if (document.getElementById('nextButton').textContent === "Begin Quest") {
-                document.getElementById('nextButton').textContent = "Next";
             }
             
             // Display the current quest
@@ -939,6 +1200,9 @@
             
             // Update game interface based on region
             document.getElementById('locationImage').style = locationImages[currentRegion];
+            
+            // Hide the next button until an answer is selected
+            document.getElementById('nextButton').style.display = 'none';
         }
         
         function checkAnswer(selectedAnswer) {
@@ -980,8 +1244,15 @@
                 questProgress++;
                 updateProgress();
                 
-                // Show next button
-                document.getElementById('nextButton').style.display = 'inline-block';
+                // Show next button with pulsing effect to draw attention
+                const nextButton = document.getElementById('nextButton');
+                nextButton.style.display = 'inline-block';
+                nextButton.classList.add('pulse-button');
+                
+                // Remove pulsing effect after 2 seconds
+                setTimeout(() => {
+                    nextButton.classList.remove('pulse-button');
+                }, 2000);
             } else {
                 // Wrong answer
                 feedback.textContent = "That's not quite right. Try again!";
@@ -1079,18 +1350,12 @@
                 const nextButton = document.getElementById('nextButton');
                 nextButton.textContent = "Choose Next Region";
                 nextButton.classList.add('pulse-button');
-                nextButton.onclick = function() {
-                    // Remove pulsing effect
-                    nextButton.classList.remove('pulse-button');
-                    
-                    // Show region selection
-                    document.getElementById('regionSelect').style.display = 'block';
-                    
-                    // Reset button
-                    nextButton.textContent = "Next";
-                    nextButton.onclick = nextQuest;
-                    nextButton.style.display = 'none';
-                };
+                
+                // We don't need to set onclick here since it's handled by the initializeButtons function
+                // The button text "Choose Next Region" will trigger the appropriate behavior
+                
+                // Make sure the button is visible
+                nextButton.style.display = 'inline-block';
             }
             
             // Add bonus XP
