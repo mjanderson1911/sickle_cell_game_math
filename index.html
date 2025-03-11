@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magical Journeys: The Quest for Healing</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #e0f7fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+        }
+        .game-container {
+            width: 90%;
+            max-width: 800px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            margin: 20px 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #6a1b9a;
+            margin-bottom: 5px;
+        }
+        .character-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .character-stats {
+            background-color: #f0f8ff;
+            padding: 10px;
+            border-radius: 10px;
+            width: 200px;
+            text-align: left;
+            border: 2px solid #9c27b0;
+        }
+        .game-area {
+            position: relative;
+            min-height: 300px;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .location-image {
+            width: 100%;
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .quest-text {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .math-problem {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #e1bee7;
+            border-radius: 8px;
+        }
+        .answer-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .option-btn {
+            padding: 10px 20px;
+            background-color: #9c27b0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .option-btn:hover {
+            transform: scale(1.05);
+            background-color: #7b1fa2;
+        }
+        .feedback {
+            min-height: 50px;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .control-btn {
+            padding: 8px 15px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .control-btn:hover {
+            background-color: #388e3c;
+        }
+        .wizard-image {
+            width: 100px;
+            height: 100px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 0 auto 10px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .progress {
+            height: 100%;
+            background-color: #4caf50;
+            width: 0%;
+            transition: width 0.5s;
+        }
+        .region-select {
+            margin-top: 20px;
+            display: none;
+        }
+        .region-btn {
+            padding: 10px 15px;
+            margin: 0 10px;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .region-btn:hover {
+            background-color: #1976d2;
+        }
+        .hide {
+            display: none;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            text-align: center;
+        }
+        .character-select {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .character-option {
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+            position: relative;
+            width: 120px;
+            margin: 0 10px;
+        }
+        .character-option:hover {
+            background-color: #e1bee7;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .character-option.selected {
+            border-color: #9c27b0;
+            background-color: #e1bee7;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .character-option.selected::after {
+            content: "✓";
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #4caf50;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            animation: bounceIn 0.5s;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .character-option img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+        .character-option:hover img {
+            transform: scale(1.1);
+        }
+        .character-details-container {
+            position: relative;
+            height: 200px;
+            margin-top: 20px;
+            width: 100%;
+            /* Reserve space even when empty */
+            min-height: 200px;
+        }
+        .character-details {
+            display: none;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            text-align: left;
+            animation: fadeIn 0.5s;
+            border-left: 4px solid;
+            height: 150px;
+            overflow-y: auto;
+            position: absolute;
+            left: 0;
+            right: 0;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
+            z-index: 1;
+        }
+        #blueDetails {
+            border-left-color: #0095ff;
+        }
+        #purpleDetails {
+            border-left-color: #6200ff;
+        }
+        #greenDetails {
+            border-left-color: #00ff95;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .character-name-input {
+            margin-top: 20px;
+            padding: 10px;
+            width: 80%;
+            border: 2px solid #9c27b0;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        button.start-btn {
+            padding: 12px 25px;
+            background-color: #9c27b0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        button.start-btn:hover {
+            background-color: #7b1fa2;
+            transform: scale(1.05);
+        }
+        .wizard-silhouette {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+        .wizard-silhouette::before {
+            content: "";
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: inherit;
+            border-radius: 50%;
+            top: 15px;
+        }
+        .wizard-silhouette::after {
+            content: "";
+            position: absolute;
+            width: 80px;
+            height: 40px;
+            background-color: inherit;
+            bottom: -10px;
+            border-radius: 50% 50% 0 0;
+        }
+        .wizard-hat {
+            position: absolute;
+            top: -25px;
+            width: 0;
+            height: 0;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 50px solid;
+            z-index: 1;
+        }
+        .win-message {
+            font-size: 24px;
+            color: #4caf50;
+            margin-bottom: 15px;
+            animation: win-pulse 2s infinite;
+        }
+        @keyframes win-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .character-bonus {
+            color: #9c27b0;
+            font-weight: bold;
+            font-style: italic;
+            margin-top: 10px;
+        }
+        
+        .pulse-button {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+            }
+            
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+            }
+            
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+            }
+        }
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            overflow: hidden;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            top: -10px;
+            animation: confetti-fall 5s linear infinite;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>Magical Journeys: The Quest for Healing</h1>
+            <p>Help your wizard navigate through magical lands, solve math problems, and learn to manage Moon Blood!</p>
+        </div>
+
+        <div id="characterSelect" class="modal" style="display: flex;">
+            <div class="modal-content">
+                <h2>Choose Your Wizard</h2>
+                <p>Select your magical character to begin your journey!</p>
+                <div class="character-select">
+                    <div class="character-option" onclick="selectCharacter('blue')">
+                        <div class="wizard-silhouette" style="background-color: #a1efff;">
+                            <div class="wizard-hat" style="border-bottom-color: #0095ff;"></div>
+                        </div>
+                        <p>Blue Wizard</p>
+                    </div>
+                    <div class="character-option" onclick="selectCharacter('purple')">
+                        <div class="wizard-silhouette" style="background-color: #bda1ff;">
+                            <div class="wizard-hat" style="border-bottom-color: #6200ff;"></div>
+                        </div>
+                        <p>Purple Wizard</p>
+                    </div>
+                    <div class="character-option" onclick="selectCharacter('green')">
+                        <div class="wizard-silhouette" style="background-color: #a1ffbd;">
+                            <div class="wizard-hat" style="border-bottom-color: #00ff95;"></div>
+                        </div>
+                        <p>Green Wizard</p>
+                    </div>
+                </div>
+                
+                <div class="character-details-container">
+                    <div id="blueDetails" class="character-details">
+                        <h3>Blue Wizard</h3>
+                        <p><strong>Special Ability:</strong> Water Mastery</p>
+                        <p>The Blue Wizard has a natural connection to water magic. They gain extra hydration points and can navigate water-related challenges with ease.</p>
+                        <p><strong>Starting Bonus:</strong> +20 Water Level</p>
+                    </div>
+                    
+                    <div id="purpleDetails" class="character-details">
+                        <h3>Purple Wizard</h3>
+                        <p><strong>Special Ability:</strong> Potion Expert</p>
+                        <p>The Purple Wizard is skilled in the art of potion-making. They can use medications more effectively and understand complex healing formulas.</p>
+                        <p><strong>Starting Bonus:</strong> +10 Health</p>
+                    </div>
+                    
+                    <div id="greenDetails" class="character-details">
+                        <h3>Green Wizard</h3>
+                        <p><strong>Special Ability:</strong> Cell Whisperer</p>
+                        <p>The Green Wizard can communicate with blood cells. They understand Moon Blood patterns better and can predict changes in their condition.</p>
+                        <p><strong>Starting Bonus:</strong> +15 XP</p>
+                    </div>
+                </div>
+                
+                <input type="text" id="playerNameInput" class="character-name-input" placeholder="Enter your wizard's name (optional)" maxlength="20">
+                
+                <button class="start-btn" onclick="startGame()">Start Your Journey</button>
+            </div>
+        </div>
+
+        <div class="character-container hide" id="gameInterface">
+            <div class="character-stats">
+                <div id="wizardImage" class="wizard-image"></div>
+                <p><strong>Wizard Name:</strong> <span id="playerName">Magical Friend</span></p>
+                <p><strong>Health:</strong> <span id="healthValue">100</span>/100</p>
+                <p><strong>Water Level:</strong> <span id="waterValue">80</span>/100</p>
+                <p><strong>XP:</strong> <span id="xpValue">0</span></p>
+                <div class="progress-bar">
+                    <div class="progress" id="questProgress"></div>
+                </div>
+                <p><strong>Location:</strong> <span id="currentLocation">Starting Journey</span></p>
+            </div>
+
+            <div class="character-stats">
+                <h3>Moon Blood Status</h3>
+                <p><strong>Pain Level:</strong> <span id="painLevel">Low</span></p>
+                <p><strong>Medication:</strong> <span id="medicationStatus">Taken</span></p>
+                <p><strong>Items:</strong></p>
+                <ul id="itemsList">
+                    <li>Water Flask</li>
+                    <li>Healing Potion</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="game-area hide" id="gameInterface2">
+            <div id="locationImage" class="location-image"></div>
+            <div id="questText" class="quest-text">
+                Welcome to your magical journey! Your quest to manage Moon Blood begins now.
+            </div>
+            <div id="mathProblem" class="math-problem"></div>
+            <div id="answerOptions" class="answer-options"></div>
+            <div id="feedback" class="feedback"></div>
+            <div class="controls">
+                <button id="nextButton" class="control-btn" onclick="nextQuest()">Begin Quest</button>
+                <button id="helpButton" class="control-btn" onclick="showHelp()">Help</button>
+            </div>
+        </div>
+
+        <div class="region-select" id="regionSelect">
+            <h3>Choose Your Next Destination:</h3>
+            <button class="region-btn" onclick="selectRegion('hydration')">Hydration Forest</button>
+            <button class="region-btn" onclick="selectRegion('medication')">Medication Mountains</button>
+            <button class="region-btn" onclick="selectRegion('blood')">Blood Cell Cavern</button>
+        </div>
+    </div>
+
+    <script>
+        // Game state variables
+        let playerCharacter = '';
+        let currentRegion = '';
+        let questProgress = 0;
+        let questsCompleted = 0;
+        let health = 100;
+        let water = 80;
+        let xp = 0;
+        let currentProblemAnswer = 0;
+        let problemsCorrect = 0;
+        let regionQuestCount = 3; // Number of quests per region
+        
+        // Backgrounds for different regions
+        const backgrounds = {
+            hydration: '#a1efff',
+            medication: '#bda1ff',
+            blood: '#ffa1a1'
+        };
+        
+        // Problems by region
+        const problems = {
+            hydration: [
+                {
+                    question: "You need to drink 8 cups of water daily. If you've had 3 cups, how many more do you need?",
+                    options: [3, 4, 5, 6],
+                    answer: 5,
+                    feedback: "Great job! Staying hydrated with 8 cups daily helps manage Moon Blood."
+                },
+                {
+                    question: "If one water bottle holds 2 cups and you need 10 cups today, how many bottles will you drink?",
+                    options: [3, 4, 5, 6],
+                    answer: 5,
+                    feedback: "Excellent! When it's hot, you need extra water to keep Moon Blood flowing smoothly."
+                },
+                {
+                    question: "You drank 4 cups in the morning and 3 cups in the afternoon. How many total cups have you had?",
+                    options: [5, 6, 7, 8],
+                    answer: 7,
+                    feedback: "Perfect! Tracking your water intake helps prevent Moon Blood pain."
+                }
+            ],
+            medication: [
+                {
+                    question: "If you take 2 pills every 6 hours, how many pills do you take in 24 hours?",
+                    options: [6, 7, 8, 9],
+                    answer: 8,
+                    feedback: "Correct! Taking medicine regularly helps keep Moon Blood healthy."
+                },
+                {
+                    question: "Your medicine bottle has 30 pills. If you take 2 pills daily, how many days will it last?",
+                    options: [10, 12, 15, 20],
+                    answer: 15,
+                    feedback: "That's right! Always make sure you have enough medicine before it runs out."
+                },
+                {
+                    question: "If your medicine costs 5 gold coins per week, how much does it cost for 4 weeks?",
+                    options: [15, 18, 20, 25],
+                    answer: 20,
+                    feedback: "Great calculation! Planning for medicine expenses is important for Moon Blood care."
+                }
+            ],
+            blood: [
+                {
+                    question: "If 30% of your 100 blood cells are Moon shaped, how many are normal round cells?",
+                    options: [30, 50, 70, 90],
+                    answer: 70,
+                    feedback: "Excellent! Understanding your blood cells helps manage Moon Blood."
+                },
+                {
+                    question: "If you have 200 blood cells and 1/4 of them are Moon shaped, how many Moon cells do you have?",
+                    options: [25, 50, 75, 100],
+                    answer: 50,
+                    feedback: "That's right! Moon cells can cause pain when they clump together."
+                },
+                {
+                    question: "If your normal blood count is 40, and it drops by 10, what percentage has it decreased by?",
+                    options: [10, 15, 20, 25],
+                    answer: 25,
+                    feedback: "Great job! Monitoring blood counts helps track Moon Blood health."
+                }
+            ]
+        };
+        
+        // Quest descriptions
+        const questDescriptions = {
+            hydration: [
+                "You've entered the Hydration Forest where water sprites play! One approaches you with a question about staying hydrated.",
+                "The Water Guardian stands before a magical spring. To drink from it, you must answer correctly.",
+                "A friendly river dolphin needs help calculating water for a thirsty traveler with Moon Blood."
+            ],
+            medication: [
+                "Welcome to the Medication Mountains! A wise owl healer asks you about proper medicine dosage.",
+                "The Medicine Master is mixing potions but needs help with calculations.",
+                "A young apprentice at the Healing Academy is confused about medicine schedules. Can you help?"
+            ],
+            blood: [
+                "Inside the Blood Cell Cavern, tiny cell-shaped creatures float around you. One stops to ask you a question.",
+                "The Blood Flow River is moving slowly. The River Guardian needs your help to calculate healthy blood ratios.",
+                "Doctor Cellwise is teaching young wizards about Moon Blood. Help answer the question for the class."
+            ]
+        };
+        
+        // Images for locations
+        const locationImages = {
+            hydration: 'background: linear-gradient(to bottom, #a1efff, #0095ff)',
+            medication: 'background: linear-gradient(to bottom, #bda1ff, #6200ff)',
+            blood: 'background: linear-gradient(to bottom, #ffa1a1, #ff0000)'
+        };
+        
+        // Character images with improved visuals
+        const characterImages = {
+            blue: 'background-color: #0095ff; position: relative;',
+            purple: 'background-color: #6200ff; position: relative;',
+            green: 'background-color: #00ff95; position: relative;'
+        };
+        
+        // Character bonuses
+        const characterBonuses = {
+            blue: { water: 20, health: 0, xp: 0 },
+            purple: { water: 0, health: 10, xp: 0 },
+            green: { water: 0, health: 0, xp: 15 }
+        };
+        
+        // Character special abilities
+        const characterAbilities = {
+            blue: {
+                name: "Water Mastery",
+                effect: function(stats) {
+                    // Blue wizard gets extra water from correct answers
+                    return { ...stats, water: stats.water + 5 };
+                }
+            },
+            purple: {
+                name: "Potion Expert",
+                effect: function(stats) {
+                    // Purple wizard gets extra health from correct answers
+                    return { ...stats, health: stats.health + 3 };
+                }
+            },
+            green: {
+                name: "Cell Whisperer",
+                effect: function(stats) {
+                    // Green wizard gets extra XP from correct answers
+                    return { ...stats, xp: stats.xp + 5 };
+                }
+            }
+        };
+        
+        // Functions
+        function selectCharacter(character) {
+            playerCharacter = character;
+            
+            // Reset all character options
+            document.querySelectorAll('.character-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Hide all character details
+            document.querySelectorAll('.character-details').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Select the chosen character
+            document.querySelectorAll('.character-option').forEach(el => {
+                if (el.querySelector('p').textContent.toLowerCase().includes(character)) {
+                    el.classList.add('selected');
+                }
+            });
+            
+            // Show character details
+            document.getElementById(character + 'Details').style.display = 'block';
+            
+            // Show name input
+            document.getElementById('playerNameInput').style.display = 'block';
+            
+            // Apply starting bonuses
+            water = 80 + characterBonuses[character].water;
+            health = 100 + characterBonuses[character].health;
+            xp = characterBonuses[character].xp;
+            
+            // Play selection sound effect
+            playSelectSound(character);
+        }
+        
+        // Add event listeners for character options after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const characterOptions = document.querySelectorAll('.character-option');
+            const detailsContainer = document.querySelector('.character-details-container');
+            
+            // Add hover event listeners
+            characterOptions.forEach(option => {
+                const character = option.querySelector('p').textContent.toLowerCase().split(' ')[0];
+                
+                option.addEventListener('mouseenter', function() {
+                    if (!playerCharacter) {
+                        document.querySelectorAll('.character-details').forEach(el => {
+                            el.style.display = 'none';
+                        });
+                        document.getElementById(character + 'Details').style.display = 'block';
+                    }
+                });
+                
+                option.addEventListener('mouseleave', function(e) {
+                    if (!playerCharacter) {
+                        // Check if we're not hovering over another character option or the details container
+                        const relatedTarget = e.relatedTarget;
+                        if (!relatedTarget || 
+                            (!relatedTarget.closest('.character-option') && 
+                             !relatedTarget.closest('.character-details-container'))) {
+                            document.querySelectorAll('.character-details').forEach(el => {
+                                el.style.display = 'none';
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // Add event listener for the details container
+            if (detailsContainer) {
+                detailsContainer.addEventListener('mouseleave', function(e) {
+                    if (!playerCharacter) {
+                        // Check if we're not hovering over a character option
+                        const relatedTarget = e.relatedTarget;
+                        if (!relatedTarget || !relatedTarget.closest('.character-option')) {
+                            document.querySelectorAll('.character-details').forEach(el => {
+                                el.style.display = 'none';
+                            });
+                        }
+                    }
+                });
+            }
+        });
+        
+        function playSelectSound(character) {
+            // Create audio element for selection sound
+            const audio = new Audio();
+            
+            // Set different sounds based on character
+            switch(character) {
+                case 'blue':
+                    audio.src = 'data:audio/wav;base64,UklGRl9CAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YTtCAACA'; // Water sound
+                    break;
+                case 'purple':
+                    audio.src = 'data:audio/wav;base64,UklGRl9CAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YTtCAACA'; // Potion sound
+                    break;
+                case 'green':
+                    audio.src = 'data:audio/wav;base64,UklGRl9CAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YTtCAACA'; // Nature sound
+                    break;
+            }
+            
+            // Play the sound (commented out since we're using dummy base64 data)
+            // audio.play();
+        }
+        
+        function startGame() {
+            if (!playerCharacter) {
+                alert("Please select a character to begin!");
+                return;
+            }
+            
+            // Get custom name if provided
+            const customName = document.getElementById('playerNameInput').value.trim();
+            let wizardName = playerCharacter.charAt(0).toUpperCase() + playerCharacter.slice(1) + " Wizard";
+            
+            if (customName) {
+                wizardName = customName;
+            }
+            
+            document.getElementById('characterSelect').style.display = 'none';
+            document.getElementById('gameInterface').classList.remove('hide');
+            document.getElementById('gameInterface2').classList.remove('hide');
+            
+            // Create wizard image with hat
+            const wizardImage = document.getElementById('wizardImage');
+            wizardImage.style = characterImages[playerCharacter];
+            wizardImage.innerHTML = `
+                <div class="wizard-hat" style="border-bottom-color: ${playerCharacter === 'blue' ? '#0095ff' : playerCharacter === 'purple' ? '#6200ff' : '#00ff95'};"></div>
+            `;
+            
+            document.getElementById('playerName').textContent = wizardName;
+            
+            // Update stats with character bonuses
+            updateStats();
+            
+            // Show region selection
+            document.getElementById('regionSelect').style.display = 'block';
+        }
+        
+        function selectRegion(region) {
+            currentRegion = region;
+            document.getElementById('regionSelect').style.display = 'none';
+            document.getElementById('currentLocation').textContent = region.charAt(0).toUpperCase() + region.slice(1) + " Land";
+            document.getElementById('locationImage').style = locationImages[region];
+            questProgress = 0;
+            updateProgress();
+            
+            // Show introduction to the region instead of immediately starting the quest
+            showRegionIntroduction(region);
+        }
+        
+        function showRegionIntroduction(region) {
+            // Hide math problem and answer options during introduction
+            document.getElementById('mathProblem').style.display = 'none';
+            document.getElementById('answerOptions').innerHTML = '';
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('feedback').style.backgroundColor = 'transparent';
+            
+            // Set the location image
+            document.getElementById('locationImage').style = locationImages[region];
+            
+            // Create region-specific introduction text
+            let introText = '';
+            switch(region) {
+                case 'hydration':
+                    introText = `<h3>Welcome to the Hydration Forest!</h3>
+                    <p>This magical forest is filled with water sprites and flowing rivers. The water here has special healing properties for those with Moon Blood.</p>
+                    <p>Your task is to solve water-related math problems to help the forest creatures and learn about proper hydration for managing Moon Blood.</p>`;
+                    break;
+                case 'medication':
+                    introText = `<h3>Welcome to the Medication Mountains!</h3>
+                    <p>These mystical mountains are home to wise healers who create powerful potions and medicines for Moon Blood management.</p>
+                    <p>Your challenge is to solve medication-related math problems to help the healers and learn about proper medication schedules.</p>`;
+                    break;
+                case 'blood':
+                    introText = `<h3>Welcome to the Blood Cell Cavern!</h3>
+                    <p>Inside this mysterious cavern, you can see the microscopic world of blood cells. Moon-shaped cells flow alongside normal round cells.</p>
+                    <p>Your mission is to solve blood-related math problems to understand how Moon Blood works in your body.</p>`;
+                    break;
+            }
+            
+            // Add character-specific bonus text
+            if (playerCharacter) {
+                switch(playerCharacter) {
+                    case 'blue':
+                        if (region === 'hydration') {
+                            introText += `<p class="character-bonus">As a Blue Wizard with Water Mastery, you'll find special advantages in this region!</p>`;
+                        }
+                        break;
+                    case 'purple':
+                        if (region === 'medication') {
+                            introText += `<p class="character-bonus">As a Purple Wizard with Potion Expert abilities, you'll excel in this region!</p>`;
+                        }
+                        break;
+                    case 'green':
+                        if (region === 'blood') {
+                            introText += `<p class="character-bonus">As a Green Wizard with Cell Whisperer powers, this region will reveal special secrets to you!</p>`;
+                        }
+                        break;
+                }
+            }
+            
+            // Set the quest text to the introduction
+            document.getElementById('questText').innerHTML = introText;
+            
+            // Update the button text and make it visible
+            const nextButton = document.getElementById('nextButton');
+            nextButton.textContent = "Begin Quest";
+            nextButton.style.display = 'inline-block';
+            nextButton.onclick = beginFirstQuest;
+            
+            // Add a pulsing effect to the button to draw attention
+            nextButton.classList.add('pulse-button');
+        }
+        
+        function beginFirstQuest() {
+            // Remove the pulsing effect
+            document.getElementById('nextButton').classList.remove('pulse-button');
+            
+            // Reset the button's onclick to the standard nextQuest function
+            document.getElementById('nextButton').onclick = nextQuest;
+            
+            // Show math problem section
+            document.getElementById('mathProblem').style.display = 'block';
+            
+            // Start the first quest
+            nextQuest();
+        }
+        
+        function nextQuest() {
+            // Check if we've completed all quests in the region
+            if (questProgress >= regionQuestCount) {
+                completeRegion();
+                return;
+            }
+            
+            // Update button text after beginning
+            if (document.getElementById('nextButton').textContent === "Begin Quest") {
+                document.getElementById('nextButton').textContent = "Next";
+            }
+            
+            // Display the current quest
+            document.getElementById('questText').textContent = questDescriptions[currentRegion][questProgress];
+            
+            // Display the math problem
+            const problem = problems[currentRegion][questProgress];
+            document.getElementById('mathProblem').textContent = problem.question;
+            document.getElementById('mathProblem').style.display = 'block';
+            
+            // Create answer buttons
+            let answerHTML = '';
+            problem.options.forEach(option => {
+                answerHTML += `<button class="option-btn" onclick="checkAnswer(${option})">${option}</button>`;
+            });
+            document.getElementById('answerOptions').innerHTML = answerHTML;
+            
+            // Store correct answer
+            currentProblemAnswer = problem.answer;
+            
+            // Clear previous feedback
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('feedback').style.backgroundColor = 'transparent';
+            
+            // Update game interface based on region
+            document.getElementById('locationImage').style = locationImages[currentRegion];
+        }
+        
+        function checkAnswer(selectedAnswer) {
+            const feedback = document.getElementById('feedback');
+            
+            if (selectedAnswer === currentProblemAnswer) {
+                // Correct answer
+                feedback.textContent = problems[currentRegion][questProgress].feedback;
+                feedback.style.backgroundColor = '#c8e6c9';
+                feedback.style.color = '#2e7d32';
+                
+                // Update player stats
+                xp += 10;
+                water = Math.min(100, water + 10);
+                health = Math.min(100, health + 5);
+                
+                // Apply character special ability if available
+                if (playerCharacter && characterAbilities[playerCharacter]) {
+                    const newStats = characterAbilities[playerCharacter].effect({
+                        xp: xp,
+                        water: water,
+                        health: health
+                    });
+                    
+                    xp = newStats.xp;
+                    water = Math.min(100, newStats.water);
+                    health = Math.min(100, newStats.health);
+                    
+                    // Add ability effect to feedback
+                    feedback.textContent += ` Your ${characterAbilities[playerCharacter].name} ability gave you a bonus!`;
+                }
+                
+                problemsCorrect++;
+                
+                // Disable answer buttons
+                disableAnswerButtons();
+                
+                // Prepare for next quest
+                questProgress++;
+                updateProgress();
+                
+                // Show next button
+                document.getElementById('nextButton').style.display = 'inline-block';
+            } else {
+                // Wrong answer
+                feedback.textContent = "That's not quite right. Try again!";
+                feedback.style.backgroundColor = '#ffcdd2';
+                feedback.style.color = '#c62828';
+                
+                // Decrease water level slightly
+                water = Math.max(0, water - 5);
+            }
+            
+            // Update stats display
+            updateStats();
+        }
+        
+        function disableAnswerButtons() {
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(button => {
+                if (parseInt(button.textContent) === currentProblemAnswer) {
+                    button.style.backgroundColor = '#4caf50';
+                } else {
+                    button.style.backgroundColor = '#9e9e9e';
+                }
+                button.disabled = true;
+            });
+        }
+        
+        function updateProgress() {
+            const progressPercent = (questProgress / regionQuestCount) * 100;
+            document.getElementById('questProgress').style.width = progressPercent + '%';
+        }
+        
+        function updateStats() {
+            document.getElementById('healthValue').textContent = health;
+            document.getElementById('waterValue').textContent = water;
+            document.getElementById('xpValue').textContent = xp;
+            
+            // Update Moon Blood status based on water and health
+            const painLevel = document.getElementById('painLevel');
+            if (water < 30) {
+                painLevel.textContent = "High";
+                painLevel.style.color = "#c62828";
+            } else if (water < 60) {
+                painLevel.textContent = "Medium";
+                painLevel.style.color = "#ff8f00";
+            } else {
+                painLevel.textContent = "Low";
+                painLevel.style.color = "#2e7d32";
+            }
+        }
+        
+        function completeRegion() {
+            questsCompleted++;
+            
+            // Add special item to inventory
+            const itemsList = document.getElementById('itemsList');
+            const newItem = document.createElement('li');
+            
+            switch(currentRegion) {
+                case 'hydration':
+                    newItem.textContent = "Enchanted Water Bottle";
+                    break;
+                case 'medication':
+                    newItem.textContent = "Magical Medicine Pouch";
+                    break;
+                case 'blood':
+                    newItem.textContent = "Blood Cell Amulet";
+                    break;
+            }
+            
+            itemsList.appendChild(newItem);
+            
+            // Show completion message
+            document.getElementById('mathProblem').style.display = 'none';
+            document.getElementById('answerOptions').innerHTML = '';
+            
+            if (questsCompleted >= 3) {
+                // Game complete
+                document.getElementById('questText').innerHTML = 
+                    `<div class="win-message">Congratulations! You've completed all regions!</div>
+                     <p>Your wizard has learned how to manage Moon Blood through hydration, medication, and understanding blood cells.</p>
+                     <p>With your knowledge and magical items, you'll be able to live a healthy, magical life!</p>`;
+                document.getElementById('nextButton').style.display = 'none';
+                
+                // Add a celebration effect
+                celebrateCompletion();
+            } else {
+                // Region complete
+                document.getElementById('questText').innerHTML = 
+                    `<div class="win-message">Region Complete!</div>
+                     <p>You've completed all the quests in the ${currentRegion.charAt(0).toUpperCase() + currentRegion.slice(1)} region!</p>
+                     <p>You earned a special item: <strong>${newItem.textContent}</strong></p>
+                     <p>You've learned important skills for managing Moon Blood through ${currentRegion}.</p>`;
+                
+                // Update button with pulsing effect
+                const nextButton = document.getElementById('nextButton');
+                nextButton.textContent = "Choose Next Region";
+                nextButton.classList.add('pulse-button');
+                nextButton.onclick = function() {
+                    // Remove pulsing effect
+                    nextButton.classList.remove('pulse-button');
+                    
+                    // Show region selection
+                    document.getElementById('regionSelect').style.display = 'block';
+                    
+                    // Reset button
+                    nextButton.textContent = "Next";
+                    nextButton.onclick = nextQuest;
+                    nextButton.style.display = 'none';
+                };
+            }
+            
+            // Add bonus XP
+            xp += 20;
+            updateStats();
+        }
+        
+        function celebrateCompletion() {
+            // Create confetti effect for game completion
+            const confettiContainer = document.createElement('div');
+            confettiContainer.className = 'confetti-container';
+            document.querySelector('.game-area').appendChild(confettiContainer);
+            
+            // Create confetti pieces
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.animationDelay = Math.random() * 5 + 's';
+                confetti.style.backgroundColor = ['#ff9999', '#99ff99', '#9999ff', '#ffff99', '#ff99ff'][Math.floor(Math.random() * 5)];
+                confettiContainer.appendChild(confetti);
+            }
+            
+            // Remove confetti after animation completes
+            setTimeout(() => {
+                confettiContainer.remove();
+            }, 10000);
+        }
+        
+        function showHelp() {
+            alert("In this game, you'll help your wizard manage Moon Blood by solving math problems related to hydration, medication, and understanding blood cells. Keep your water level high and complete quests to earn special items that help manage your condition. Good luck!");
+        }
+    </script>
+</body>
+</html>
